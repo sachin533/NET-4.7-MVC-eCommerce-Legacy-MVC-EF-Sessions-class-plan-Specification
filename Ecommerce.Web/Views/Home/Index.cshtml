@@ -1,0 +1,114 @@
+@model Ecommerce.Core.ViewModels.HomeIndexViewModel
+@{
+    ViewBag.Title = "Home";
+}
+
+@helper CategoryIcon(string name)
+{
+    var n = (name ?? "").ToLowerInvariant();
+    if (n.Contains("laptop")) { <span class="glyphicon glyphicon-laptop" aria-hidden="true"></span> }
+    else if (n.Contains("phone")) { <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> }
+    else if (n.Contains("audio")) { <span class="glyphicon glyphicon-headphones" aria-hidden="true"></span> }
+    else if (n.Contains("deal")) { <span class="glyphicon glyphicon-tags" aria-hidden="true"></span> }
+    else if (n.Contains("accessor")) { <span class="glyphicon glyphicon-console" aria-hidden="true"></span> }
+    else { <span class="glyphicon glyphicon-th" aria-hidden="true"></span> }
+}
+
+@* Hero: headline + catalog search + calls to action *@
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">Legacy Store</h1>
+        <p class="hero-lead">
+            Laptops, phones, audio and accessories — browse the catalog, build a session cart
+            and check out in three simple steps.
+        </p>
+        <form class="hero-search" action="@Url.Action("Index", "Product")" method="get" role="search">
+            <div class="input-group">
+                <input type="search" class="form-control" name="q"
+                       placeholder="Search laptops, phones, audio&hellip;" aria-label="Search products" />
+                <span class="input-group-btn">
+                    <button class="btn btn-accent" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+                    </button>
+                </span>
+            </div>
+        </form>
+        <p class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="@Url.Action("Index", "Product")">Browse the catalog</a>
+            <a class="btn btn-inverse btn-lg" href="#categories">Shop by category</a>
+        </p>
+    </div>
+</section>
+
+@* Honest highlights of what this demo store actually does *@
+<div class="feature-strip">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 feature-item">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                <div><strong>Three-step checkout</strong><br />Address, shipping &amp; payment demo</div>
+            </div>
+            <div class="col-sm-4 feature-item">
+                <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                <div><strong>Server-validated prices</strong><br />Totals recalculated on every order</div>
+            </div>
+            <div class="col-sm-4 feature-item">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                <div><strong>Secure accounts</strong><br />ASP.NET Identity sign-in &amp; order history</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title" id="categories">Shop by category</h2>
+    @if (Model.Categories.Count == 0)
+    {
+        <p class="text-muted">No categories yet — run <code>database\01_Create_LegacyEcommerceDb.sql</code> to seed the demo catalog.</p>
+    }
+    else
+    {
+        <div class="row category-grid">
+            @foreach (var node in Model.Categories)
+            {
+                <div class="col-xs-6 col-sm-4">
+                    <a class="category-card" href="@Url.Action("Index", "Product", new { category = node.Id })">
+                        <span class="category-card-icon">@CategoryIcon(node.Name)</span>
+                        <span class="category-card-name">@node.Name</span>
+                        <span class="category-card-count">
+                            @(node.ProductCount == 1 ? "1 product" : node.ProductCount + " products")
+                        </span>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+    <h2 class="section-title">Featured products</h2>
+    @if (Model.Featured.Count == 0)
+    {
+        <div class="empty-state">
+            <span class="glyphicon glyphicon-picture empty-state-icon" aria-hidden="true"></span>
+            <h4>No featured products yet</h4>
+            <p class="text-muted">
+                Run the demo seed (<code>database\01_Create_LegacyEcommerceDb.sql</code>)
+                to populate the catalog, or browse the full store below.
+            </p>
+            <a class="btn btn-primary" href="@Url.Action("Index", "Product")">Browse the catalog</a>
+        </div>
+    }
+    else
+    {
+        <div class="row product-grid">
+            @foreach (var product in Model.Featured)
+            {
+                @Html.Partial("_ProductCard", product)
+            }
+        </div>
+        <p class="text-center">
+            <a class="btn btn-default" href="@Url.Action("Index", "Product")">
+                View all products &raquo;
+            </a>
+        </p>
+    }
+</div>

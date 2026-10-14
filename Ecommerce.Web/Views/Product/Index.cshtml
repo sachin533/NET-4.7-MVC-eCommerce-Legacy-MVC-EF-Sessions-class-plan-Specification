@@ -1,0 +1,72 @@
+@model Ecommerce.Core.ViewModels.ProductListViewModel
+@{
+    ViewBag.Title = string.IsNullOrEmpty(Model.SelectedCategoryName) ? "Catalog" : Model.SelectedCategoryName + " — Catalog";
+}
+
+@section Sidebar {
+    @Html.Partial("_Sidebar", Model)
+}
+
+<h2 id="catalog-heading">
+    @(string.IsNullOrEmpty(Model.SelectedCategoryName) ? "Catalog" : Model.SelectedCategoryName)
+    @if (!string.IsNullOrEmpty(Model.Query))
+    {
+        <small>— results for “@Model.Query”</small>
+    }
+</h2>
+
+@* Toolbar: a real GET form (works without JavaScript); Scripts/site.js intercepts it
+    and re-filters #product-list via /Product/Filter instead of reloading. *@
+<form id="catalog-filter-form" class="catalog-toolbar" method="get" action="@Url.Action("Index", "Product")">
+    <input type="hidden" name="category" value="@(Model.SelectedCategoryId.HasValue ? Model.SelectedCategoryId.Value.ToString() : "")" />
+    <input type="hidden" name="q" value="@(Model.Query ?? "")" />
+    <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <label for="filter-sort">Sort by</label>
+            <select id="filter-sort" name="sort" class="form-control">
+                <option value="newest" @(Model.Sort == "newest" ? "selected" : null)>Newest first</option>
+                <option value="name" @(Model.Sort == "name" ? "selected" : null)>Name A–Z</option>
+                <option value="price-asc" @(Model.Sort == "price-asc" ? "selected" : null)>Price: low to high</option>
+                <option value="price-desc" @(Model.Sort == "price-desc" ? "selected" : null)>Price: high to low</option>
+            </select>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <label for="filter-min">Min price ($)</label>
+            <input type="number" class="form-control" id="filter-min" name="priceMin"
+                   min="0" step="1" placeholder="Any" value="@(Model.MinPrice.HasValue ? Model.MinPrice.Value.ToString() : "")" />
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <label for="filter-max">Max price ($)</label>
+            <input type="number" class="form-control" id="filter-max" name="priceMax"
+                   min="0" step="1" placeholder="Any" value="@(Model.MaxPrice.HasValue ? Model.MaxPrice.Value.ToString() : "")" />
+        </div>
+        <div class="col-xs-12 col-sm-2 toolbar-actions">
+            <label class="toolbar-apply-label" aria-hidden="true">&nbsp;</label>
+            <button type="submit" class="btn btn-primary btn-block">
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Apply
+            </button>
+        </div>
+    </div>
+    <p class="toolbar-links">
+        <a href="@Url.Action("Index", "Product")" id="reset-filters">Reset all filters</a>
+    </p>
+</form>
+
+@* The AJAX filter (Scripts/site.js) swaps only this element's contents via /Product/Filter. *@
+<div id="product-list"
+     data-filter-url="@Url.Action("Filter", "Product")"
+     data-category="@(Model.SelectedCategoryId.HasValue ? Model.SelectedCategoryId.Value.ToString() : "")"
+     data-q="@(Model.Query ?? "")"
+     data-sort="@(Model.Sort ?? "newest")"
+     data-min="@(Model.MinPrice.HasValue ? Model.MinPrice.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
+     data-max="@(Model.MaxPrice.HasValue ? Model.MaxPrice.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")">
+    @Html.Partial("_ProductList", Model)
+</div>
+<div id="product-list-error" class="alert alert-danger" style="display:none" role="alert"></div>
+
+@section scripts {
+    @* Also required so the sidebar search and toolbar can run through the AJAX filter. *@
+    <script type="text/javascript">
+        $(function () { LegacyStore.initCatalogFilter(); });
+    </script>
+}

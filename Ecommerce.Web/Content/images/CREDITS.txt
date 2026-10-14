@@ -1,0 +1,66 @@
+Product image credits — Legacy Store demo
+==========================================================
+All photographs are from Wikimedia Commons, were re-sized
+to a uniform 1000x750 canvas (white padding, JPEG q85),
+and are used under the licenses listed below.
+
+File:    novabook-pro-14.jpg
+Subject: File:Lenovo ThinkPad T490.jpg
+Author:  P2u111
+License: CC BY 4.0  https://creativecommons.org/licenses/by/4.0
+Source:  https://commons.wikimedia.org/wiki/File:Lenovo_ThinkPad_T490.jpg
+
+File:    novabook-air-13.jpg
+Subject: File:Photo of an Apple MacBook Air with strong bokeh.jpg
+Author:  By Free-Photos from Pixabay
+License: CC0  http://creativecommons.org/publicdomain/zero/1.0/deed.en
+Source:  https://commons.wikimedia.org/wiki/File:Photo_of_an_Apple_MacBook_Air_with_strong_bokeh.jpg
+
+File:    terrabook-15.jpg
+Subject: File:DELL XPS 13 and 15 (37080596413).jpg
+Author:  Tinh t? Photo
+License: CC0  http://creativecommons.org/publicdomain/zero/1.0/deed.en
+Source:  https://commons.wikimedia.org/wiki/File:DELL_XPS_13_and_15_(37080596413).jpg
+
+File:    stellar-x2.jpg
+Subject: File:Samsung Galaxy Note 10 (Wiki).jpg
+Author:  ??
+License: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+Source:  https://commons.wikimedia.org/wiki/File:Samsung_Galaxy_Note_10_(Wiki).jpg
+
+File:    stellar-x2-mini.jpg
+Subject: File:IPhone 12 Mini - 4.jpg
+Author:  KKPCW
+License: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+Source:  https://commons.wikimedia.org/wiki/File:IPhone_12_Mini_-_4.jpg
+
+File:    aeropods-wireless.jpg
+Subject: File:Samsung Galaxy Buds2 Pro (Graphite).jpg
+Author:  Gannu03
+License: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+Source:  https://commons.wikimedia.org/wiki/File:Samsung_Galaxy_Buds2_Pro_(Graphite).jpg
+
+File:    studioover-pro.jpg
+Subject: File:Sony WH-CH510 Bluetooth Over-Ear Headphone.jpg
+Author:  RPSkokie
+License: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+Source:  https://commons.wikimedia.org/wiki/File:Sony_WH-CH510_Bluetooth_Over-Ear_Headphone.jpg
+
+File:    thundercharge-65w.jpg
+Subject: File:Apple 96W USB Type-C Power Adapter for new 16 inch MacBook Pro (49165128252).jpg
+Author:  Tony Webster from Minneapolis, Minnesota, United States
+License: CC BY 2.0  https://creativecommons.org/licenses/by/2.0
+Source:  https://commons.wikimedia.org/wiki/File:Apple_96W_USB_Type-C_Power_Adapter_for_new_16_inch_MacBook_Pro_(49165128252).jpg
+
+File:    flexcase-kb.jpg
+Subject: File:Wireless Computer Keyboard.jpg
+Author:  Pixloom
+License: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+Source:  https://commons.wikimedia.org/wiki/File:Wireless_Computer_Keyboard.jpg
+
+File:    stellar-x2-refurb.jpg
+Subject: File:Samsung Android Smartphone.jpg
+Author:  ??? &amp; Google
+License: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+Source:  https://commons.wikimedia.org/wiki/File:Samsung_Android_Smartphone.jpg
+

@@ -1,0 +1,86 @@
+@model Ecommerce.Core.ViewModels.CartViewModel
+@{
+    ViewBag.Title = "Your cart";
+}
+
+<h2>Your cart</h2>
+
+<div id="cart-ajax-status" class="alert" style="display:none"></div>
+
+@if (!Model.HasItems)
+{
+    <p class="text-muted">Your cart is empty.</p>
+    <p>
+        <a class="btn btn-primary" href="@Url.Action("Index", "Product")">Browse the catalog</a>
+    </p>
+}
+else
+{
+    <table class="table table-striped" id="cart-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th class="text-right">Unit price</th>
+                <th style="width:110px">Qty</th>
+                <th class="text-right">Line total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var line in Model.Lines)
+            {
+                <tr data-product-id="@line.ProductId"
+                    data-variant-id="@(line.VariantId.HasValue ? line.VariantId.Value.ToString() : "")"
+                    data-unit-price="@line.UnitPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                    data-max-stock="@line.AvailableStock">
+                    <td>
+                        <strong>@line.ProductName</strong>
+                        @if (!string.IsNullOrEmpty(line.VariantName))
+                        {
+                            <br /><small class="text-muted">@line.VariantName</small>
+                        }
+                        @if (!string.IsNullOrEmpty(line.Sku))
+                        {
+                            <br /><small class="text-muted">SKU: @line.Sku</small>
+                        }
+                    </td>
+                    <td class="text-right">@Html.Money(line.UnitPrice)</td>
+                    <td>
+                        <input type="number" class="form-control input-sm cart-qty"
+                               value="@line.Quantity" min="0" max="@line.AvailableStock" />
+                    </td>
+                    <td class="text-right line-total">@Html.Money(line.LineTotal)</td>
+                    <td class="text-right">
+                        <button type="button" class="btn btn-danger btn-sm btn-remove-line" title="Remove">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">Subtotal</th>
+                <th class="text-right" id="cart-subtotal">@Html.Money(Model.SubTotal)</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="row">
+        <div class="col-md-6">
+            <a class="btn btn-default" href="@Url.Action("Index", "Product")">Continue shopping</a>
+        </div>
+        <div class="col-md-6 text-right">
+            <a class="btn btn-primary btn-lg" href="@Url.Action("Address", "Checkout")">
+                Proceed to checkout &raquo;
+            </a>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () { LegacyStore.initCartPage(); });
+    </script>
+}

@@ -1,0 +1,49 @@
+@model Ecommerce.Core.ViewModels.ProductListViewModel
+@if (Model.TotalItems == 0)
+{
+    <div class="empty-state">
+        <span class="glyphicon glyphicon-search empty-state-icon" aria-hidden="true"></span>
+        <h4>No products found</h4>
+        <p class="text-muted">
+            Nothing matched the current filters. Try a different search term,
+            another category, or widen the price range.
+        </p>
+        <a class="btn btn-default" href="@Url.Action("Index", "Product")">Clear all filters</a>
+    </div>
+}
+else
+{
+    <p class="text-muted catalog-result-count">
+        @Model.TotalItems product(s) found
+        @if (Model.TotalPages > 1)
+        {
+            <span>— page @Model.Page of @Model.TotalPages</span>
+        }
+    </p>
+    <div class="row product-grid">
+        @foreach (var product in Model.Products)
+        {
+            @Html.Partial("_ProductCard", product)
+        }
+    </div>
+
+    if (Model.TotalPages > 1)
+    {
+        <nav id="catalog-pager" aria-label="Catalog pages">
+            <ul class="pagination">
+                <li class="@(Model.HasPreviousPage ? null : "disabled")">
+                    <a href="#" class="pager-link" data-page="@(Model.Page - 1)" aria-label="Previous">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="@(i == Model.Page ? "active" : null)">
+                        <a href="#" class="pager-link" data-page="@i">@i</a>
+                    </li>
+                }
+                <li class="@(Model.HasNextPage ? null : "disabled")">
+                    <a href="#" class="pager-link" data-page="@(Model.Page + 1)" aria-label="Next">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}

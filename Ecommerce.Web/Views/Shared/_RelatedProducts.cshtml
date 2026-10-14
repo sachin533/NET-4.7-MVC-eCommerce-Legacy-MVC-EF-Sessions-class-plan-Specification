@@ -1,0 +1,12 @@
+@* "You may also like" — rendered by the Product/RelatedProducts child action. *@
+@model IList<Ecommerce.Core.ViewModels.ProductCardViewModel>
+@if (Model != null && Model.Count > 0)
+{
+    <h3 class="section-title">You may also like</h3>
+    <div class="row product-grid">
+        @foreach (var product in Model)
+        {
+            @Html.Partial("_ProductCard", product)
+        }
+    </div>
+}

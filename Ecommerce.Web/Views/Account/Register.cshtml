@@ -1,0 +1,56 @@
+@model Ecommerce.Core.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Create an account</h2>
+
+<div class="row">
+    <div class="col-md-5">
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.FullName)
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+            @Html.ActionLink("I already have an account", "Login", "Account", null, new { @class = "btn btn-link" })
+        }
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">Password rules</div>
+            <div class="panel-body">
+                <ul>
+                    <li>At least 6 characters</li>
+                    <li>Upper + lower case letters</li>
+                    <li>At least one digit</li>
+                    <li>At least one non-alphanumeric character</li>
+                </ul>
+                <p class="text-muted">
+                    New accounts receive the <strong>Customer</strong> role when the demo
+                    database (and its seeded roles) exists.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

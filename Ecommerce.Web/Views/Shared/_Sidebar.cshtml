@@ -1,0 +1,43 @@
+@* Catalog sidebar: category tree + quick search (model is the whole list state
+    so the search box can echo the current query). *@
+@model Ecommerce.Core.ViewModels.ProductListViewModel
+<div class="panel panel-default">
+    <div class="panel-heading">Categories</div>
+    <div class="panel-body">
+        <ul class="list-unstyled category-tree" id="category-tree">
+            @foreach (var node in Model.Categories)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "Product", new { category = node.Id })">
+                        @node.Name <span class="badge">@node.ProductCount</span>
+                    </a>
+                    @if (node.Children.Any())
+                    {
+                        <ul class="list-unstyled category-children">
+                            @foreach (var child in node.Children)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Index", "Product", new { category = child.Id })">&nbsp;&nbsp;@child.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Search</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Index", "Product", FormMethod.Get, new { @class = "search-form", id = "catalog-search" }))
+        {
+            <div class="input-group input-group-sm">
+                <input type="text" name="q" value="@(Model.Query ?? "")" class="form-control" placeholder="Search products&hellip;" />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,29 @@
+@model Ecommerce.Core.ViewModels.ProductCardViewModel
+<div class="col-sm-4 col-md-3 product-card">
+    <div class="thumbnail">
+        <a href="@Url.Action("Detail", "Product", new { id = Model.Id })">
+            <img src="@Html.ImageOrPlaceholder(Model.ThumbnailUrl, Model.Name)"
+                 alt="@Model.Name" class="product-card-img" width="1000" height="750" loading="lazy"
+                 onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/Content/images/products/placeholder.png';}" />
+        </a>
+        <div class="caption">
+            <h5 class="product-card-name" title="@Model.Name">
+                <a href="@Url.Action("Detail", "Product", new { id = Model.Id })">@Model.Name</a>
+            </h5>
+            @if (!string.IsNullOrEmpty(Model.CategoryName))
+            {
+                <p class="text-muted product-card-category">@Model.CategoryName</p>
+            }
+            <p class="product-card-price">@Html.Money(Model.Price)</p>
+            <p>
+                <button type="button"
+                        class="btn btn-primary btn-sm btn-add-to-cart"
+                        data-product-id="@Model.Id"
+                        data-url="@Url.Action("Add", "Cart")">
+                    <span class="glyphicon glyphicon-shopping-cart"></span> Add to cart
+                </button>
+                <a class="btn btn-default btn-sm" href="@Url.Action("Detail", "Product", new { id = Model.Id })">Details</a>
+            </p>
+        </div>
+    </div>
+</div>

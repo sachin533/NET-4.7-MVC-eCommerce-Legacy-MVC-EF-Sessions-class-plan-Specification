@@ -1,0 +1,25 @@
+
+# Visual Studio temporary files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# NuGet packages (restore when needed)
+packages/
+
+# Temporary logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

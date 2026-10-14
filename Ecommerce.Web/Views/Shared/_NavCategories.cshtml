@@ -1,0 +1,40 @@
+@* Category dropdown in the site navbar — rendered by the Product/NavCategories child action. *@
+@model IList<Ecommerce.Core.ViewModels.CategoryTreeNodeViewModel>
+<li class="dropdown categories-menu @(Request.QueryString["category"] != null ? "active" : null)">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+       aria-haspopup="true" aria-expanded="false">
+        Categories <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="@Url.Action("Index", "Product")">
+                <strong>All products</strong>
+                <span class="badge pull-right">@Model.Sum(c => c.ProductCount)</span>
+            </a>
+        </li>
+        <li role="separator" class="divider"></li>
+        @foreach (var node in Model)
+        {
+            <li>
+                <a href="@Url.Action("Index", "Product", new { category = node.Id })">
+                    @node.Name
+                    <span class="badge pull-right">@node.ProductCount</span>
+                </a>
+                @if (node.Children.Any())
+                {
+                    <ul class="list-unstyled category-submenu">
+                        @foreach (var child in node.Children)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Product", new { category = child.Id })">
+                                    @child.Name
+                                    <span class="badge pull-right">@child.ProductCount</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+</li>

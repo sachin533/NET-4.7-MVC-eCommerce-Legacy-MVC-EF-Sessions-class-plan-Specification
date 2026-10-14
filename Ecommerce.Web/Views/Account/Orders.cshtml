@@ -1,0 +1,49 @@
+@model Ecommerce.Core.ViewModels.OrderHistoryViewModel
+@{
+    ViewBag.Title = "My orders";
+}
+
+<h2>My orders</h2>
+
+@if (!string.IsNullOrEmpty(Model.FullName) || !string.IsNullOrEmpty(Model.Email))
+{
+    <p class="text-muted">
+        @Model.FullName
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <span>— @Model.Email</span>
+        }
+    </p>
+}
+
+@if (Model.Orders.Count == 0)
+{
+    <p class="text-muted">You have not placed any orders yet.</p>
+    <p><a class="btn btn-primary" href="@Url.Action("Index", "Product")">Start shopping</a></p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderNumber)</th>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].OrderDateUtc)</th>
+                <th>@Html.DisplayNameFor(m => m.Orders[0].Status)</th>
+                <th class="text-right">@Html.DisplayNameFor(m => m.Orders[0].ItemCount)</th>
+                <th class="text-right">@Html.DisplayNameFor(m => m.Orders[0].Total)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td><strong>@order.OrderNumber</strong></td>
+                    <td>@order.OrderDateUtc.ToString("yyyy-MM-dd HH:mm") UTC</td>
+                    <td><span class="label label-info">@order.Status</span></td>
+                    <td class="text-right">@order.ItemCount</td>
+                    <td class="text-right">@Html.Money(order.Total)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

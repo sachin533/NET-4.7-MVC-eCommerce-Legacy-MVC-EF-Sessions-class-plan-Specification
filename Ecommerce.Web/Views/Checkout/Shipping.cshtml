@@ -1,0 +1,43 @@
+@model Ecommerce.Core.ViewModels.CheckoutShippingViewModel
+@{
+    ViewBag.Title = "Checkout — Shipping";
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Address", "Checkout")">1. Address</a></li>
+    <li class="active"><strong>2. Shipping</strong></li>
+    <li>3. Payment</li>
+</ol>
+
+<h2>Delivery method</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        @using (Html.BeginForm("Shipping", "Checkout", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            foreach (var option in Model.ShippingOptions)
+            {
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="ShippingMethod" value="@option.Code"
+                               @(option.Code == Model.ShippingMethod ? "checked" : null) />
+                        <strong>@option.DisplayName</strong> — @Html.Money(option.Cost)
+                        <br />
+                        <small class="text-muted">@option.DeliveryEstimate</small>
+                    </label>
+                </div>
+            }
+            @Html.ValidationMessageFor(m => m.ShippingMethod, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Continue to payment &raquo;</button>
+                <a class="btn btn-default" href="@Url.Action("Address", "Checkout")">Back</a>
+            </div>
+        }
+    </div>
+    <div class="col-md-5">
+        @Html.Action("OrderSummary", "Checkout")
+    </div>
+</div>

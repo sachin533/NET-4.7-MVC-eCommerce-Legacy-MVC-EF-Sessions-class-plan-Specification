@@ -1,0 +1,132 @@
+@model Ecommerce.Core.ViewModels.ProductDetailViewModel
+@{
+    ViewBag.Title = Model.Name;
+    var primary = Model.Images.FirstOrDefault(i => i.IsPrimary) ?? Model.Images.FirstOrDefault();
+}
+
+@section styles {
+    @Styles.Render("~/Content/fancybox")
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+    <li><a href="@Url.Action("Index", "Product")">Catalog</a></li>
+    @if (!string.IsNullOrEmpty(Model.CategoryName))
+    {
+        <li><a href="@Url.Action("Index", "Product", new { category = Model.CategoryId })">@Model.CategoryName</a></li>
+    }
+    <li class="active">@Model.Name</li>
+</ol>
+
+<div class="row product-detail">
+    <div class="col-sm-6 col-md-7">
+        @if (primary != null)
+        {
+            <!-- Fancybox gallery (all product images, primary first) -->
+            <a class="thumbnail product-main-image" href="@primary.Url" data-fancybox="gallery" data-caption="@Model.Name">
+                <img src="@primary.Url" alt="@(string.IsNullOrEmpty(primary.AltText) ? Model.Name : primary.AltText)"
+                     class="img-responsive" width="1000" height="750"
+                     onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/Content/images/products/placeholder.png';}" />
+            </a>
+            if (Model.Images.Count > 1)
+            {
+                <div class="product-thumbs">
+                    @foreach (var image in Model.Images)
+                    {
+                        if (image.Id == primary.Id) { continue; }
+                        <a class="thumbnail product-thumb" href="@image.Url" data-fancybox="gallery" data-caption="@(string.IsNullOrEmpty(image.AltText) ? Model.Name : image.AltText)">
+                            <img src="@image.Url" alt="@(string.IsNullOrEmpty(image.AltText) ? Model.Name : image.AltText)" loading="lazy" />
+                        </a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <img src="@Html.ImageOrPlaceholder(Model.ThumbnailUrl, Model.Name)" alt="@Model.Name" class="img-responsive thumbnail"
+                 onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/Content/images/products/placeholder.png';}" />
+        }
+    </div>
+
+    <div class="col-sm-6 col-md-5 product-buybox">
+        <h2 class="product-title">@Model.Name</h2>
+        <p class="text-muted product-meta">
+            SKU: @Model.Sku
+            @if (!string.IsNullOrEmpty(Model.CategoryName))
+            {
+                <span>· <a href="@Url.Action("Index", "Product", new { category = Model.CategoryId })">@Model.CategoryName</a></span>
+            }
+        </p>
+
+        @if (Model.Stock > 5)
+        {
+            <span class="label label-success stock-badge">In stock</span>
+        }
+        else if (Model.Stock > 0)
+        {
+            <span class="label label-warning stock-badge">Only @Model.Stock left</span>
+        }
+        else
+        {
+            <span class="label label-default stock-badge">Out of stock</span>
+        }
+
+        <p class="product-price">
+            <strong id="product-price">@Html.Money(Model.Price)</strong>
+        </p>
+        <p class="lead product-short-desc">@Model.ShortDescription</p>
+
+        @using (Html.BeginForm("Add", "Cart", FormMethod.Post, new { id = "add-to-cart-form", data_url = Url.Action("Add", "Cart") }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="productId" value="@Model.Id" />
+
+            if (Model.Variants.Any())
+            {
+                <div class="form-group">
+                    <label for="variantId">Option</label>
+                    <select name="variantId" id="variantId" class="form-control"
+                            data-base-price="@Model.Price">
+                        @foreach (var variant in Model.Variants)
+                        {
+                            <option value="@variant.Id"
+                                    data-adjustment="@variant.PriceAdjustment"
+                                    data-stock="@variant.Stock">
+                                @variant.Name (+@Html.Money(variant.PriceAdjustment))
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
+
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" max="@Model.Stock"
+                       class="form-control" style="max-width:110px" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block-sm" id="add-to-cart-button"
+                    @(Model.Stock <= 0 ? "disabled" : null)>
+                <span class="glyphicon glyphicon-shopping-cart"></span> Add to cart
+            </button>
+            <p class="help-block" id="stock-note">
+                @(Model.Stock > 0 ? Model.Stock + " in stock" : "Out of stock")
+            </p>
+            <div id="add-to-cart-result" class="alert" style="display:none" role="status"></div>
+        }
+    </div>
+</div>
+
+<div class="panel panel-default product-description-panel">
+    <div class="panel-heading"><strong>Description</strong></div>
+    <div class="panel-body product-description">@Model.Description</div>
+</div>
+
+@Html.Action("RelatedProducts", "Product", new { excludeId = Model.Id })
+
+@section scripts {
+    @Scripts.Render("~/bundles/fancybox")
+    <script type="text/javascript">
+        $(function () { LegacyStore.initProductDetail(); });
+    </script>
+}

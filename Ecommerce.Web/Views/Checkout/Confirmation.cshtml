@@ -1,0 +1,31 @@
+@model Ecommerce.Core.ViewModels.OrderConfirmationViewModel
+@{
+    ViewBag.Title = "Order confirmed";
+}
+
+<div class="text-center">
+    <h2><span class="glyphicon glyphicon-ok-sign text-success"></span> Thank you — your order is placed!</h2>
+    <p class="lead">Order number: <strong>@Model.OrderNumber</strong></p>
+</div>
+
+<dl class="dl-horizontal">
+    <dt>@Html.DisplayNameFor(m => m.OrderDateUtc)</dt>
+    <dd>@Model.OrderDateUtc.ToString("yyyy-MM-dd HH:mm") UTC</dd>
+
+    <dt>@Html.DisplayNameFor(m => m.ItemCount)</dt>
+    <dd>@Model.ItemCount</dd>
+
+    <dt>@Html.DisplayNameFor(m => m.ShippingMethod)</dt>
+    <dd>@Model.ShippingMethod</dd>
+
+    <dt>@Html.DisplayNameFor(m => m.PaymentReference)</dt>
+    <dd>@Model.PaymentReference</dd>
+
+    <dt>@Html.DisplayNameFor(m => m.Total)</dt>
+    <dd>@Html.Money(Model.Total)</dd>
+</dl>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Orders", "Account")">View my orders</a>
+    <a class="btn btn-default" href="@Url.Action("Index", "Product")">Continue shopping</a>
+</p>

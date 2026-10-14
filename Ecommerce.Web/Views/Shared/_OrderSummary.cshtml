@@ -1,0 +1,27 @@
+@model Ecommerce.Core.ViewModels.CheckoutShippingViewModel
+<div class="panel panel-default">
+    <div class="panel-heading">Order summary</div>
+    <div class="panel-body">
+        @if (Model == null)
+        {
+            <p class="text-muted">Your cart is empty.</p>
+        }
+        else
+        {
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(m => m.SubTotal)</dt>
+                <dd>@Html.Money(Model.SubTotal)</dd>
+                <dt>@Html.DisplayNameFor(m => m.ShippingCost)</dt>
+                <dd>@Html.Money(Model.ShippingCost)</dd>
+                <dt>@Html.DisplayNameFor(m => m.Tax)</dt>
+                <dd>@Html.Money(Model.Tax)</dd>
+                <dt class="text-primary"><strong>@Html.DisplayNameFor(m => m.Total)</strong></dt>
+                <dd class="text-primary"><strong>@Html.Money(Model.Total)</strong></dd>
+            </dl>
+            if (!string.IsNullOrEmpty(Model.ShippingMethod))
+            {
+                <p class="text-muted">Shipping method: <strong>@Model.ShippingMethod</strong></p>
+            }
+        }
+    </div>
+</div>

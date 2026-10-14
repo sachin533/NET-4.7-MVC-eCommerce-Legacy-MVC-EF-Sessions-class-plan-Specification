@@ -1,0 +1,9 @@
+@* Header mini-cart. The whole <li> content is replaced in place by site.js (.load)
+     after every add/update/remove — keep the #mini-cart element in the layout. *@
+@model Ecommerce.Core.ViewModels.MiniCartViewModel
+<a href="@Url.Action("Index", "Cart")" class="mini-cart-link" title="View your cart">
+    <span class="glyphicon glyphicon-shopping-cart mini-cart-icon" aria-hidden="true"></span>
+    <span class="mini-cart-label">Cart</span>
+    <span class="mini-cart-count badge">@Model.ItemCount</span>
+    <span class="mini-cart-total">@Html.Money(Model.SubTotal)</span>
+</a>

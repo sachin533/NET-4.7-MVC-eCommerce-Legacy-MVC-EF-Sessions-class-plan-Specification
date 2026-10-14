@@ -1,0 +1,70 @@
+@model Ecommerce.Core.ViewModels.CheckoutPaymentViewModel
+@{
+    ViewBag.Title = "Checkout — Payment";
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Address", "Checkout")">1. Address</a></li>
+    <li><a href="@Url.Action("Shipping", "Checkout")">2. Shipping</a></li>
+    <li class="active"><strong>3. Payment</strong></li>
+</ol>
+
+<h2>Payment</h2>
+<p class="label label-warning">Demo only — no gateway, no card data is stored or transmitted.</p>
+
+<div class="row">
+    <div class="col-md-7">
+        @using (Html.BeginForm("Payment", "Checkout", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.CardholderName)
+                @Html.TextBoxFor(m => m.CardholderName, new { @class = "form-control", autocomplete = "cc-name" })
+                @Html.ValidationMessageFor(m => m.CardholderName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.CardNumber)
+                @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", autocomplete = "cc-number", placeholder = "4111 1111 1111 1111" })
+                @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger" })
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ExpiryMonth)
+                        @Html.DropDownListFor(m => m.ExpiryMonth,
+                            Enumerable.Range(1, 12).Select(m => new SelectListItem { Text = m.ToString("00"), Value = m.ToString() }),
+                            new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.ExpiryMonth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ExpiryYear)
+                        @Html.DropDownListFor(m => m.ExpiryYear,
+                            Enumerable.Range(2026, 15).Select(y => new SelectListItem { Text = y.ToString(), Value = y.ToString() }),
+                            new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.ExpiryYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Cvc)
+                        @Html.TextBoxFor(m => m.Cvc, new { @class = "form-control", autocomplete = "cc-csc", maxlength = "4" })
+                        @Html.ValidationMessageFor(m => m.Cvc, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            @Html.HiddenFor(m => m.PaymentMethod)
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg">Place order</button>
+                <a class="btn btn-default" href="@Url.Action("Shipping", "Checkout")">Back</a>
+            </div>
+        }
+    </div>
+    <div class="col-md-5">
+        @Html.Action("OrderSummary", "Checkout")
+    </div>
+</div>

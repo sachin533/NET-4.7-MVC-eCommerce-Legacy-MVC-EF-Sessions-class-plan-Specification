@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Legacy Store</title>
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <!-- Global anti-forgery token: read by Scripts/site.js and sent on every AJAX POST
+         in the RequestVerificationToken header (AntiForgeryConfig.HeaderName). -->
+    <div id="anti-forgery-token" hidden="hidden">@Html.AntiForgeryToken()</div>
+
+    @{
+        var currentController = (ViewContext.RouteData.Values["controller"] ?? "").ToString();
+        var currentAction = (ViewContext.RouteData.Values["action"] ?? "").ToString();
+        var isHome = currentController == "Home";
+        var isCatalog = currentController == "Product";
+    }
+    <nav class="navbar navbar-inverse navbar-fixed-top site-navbar" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#site-nav"
+                        aria-expanded="false" aria-controls="site-nav">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand brand" href="@Url.Action("Index", "Home")" title="Legacy Store — home">
+                    <span class="glyphicon glyphicon-shopping-bag brand-icon" aria-hidden="true"></span>
+                    <span class="brand-name">Legacy Store</span>
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="site-nav">
+                @* Left: primary navigation + category dropdown (server-rendered child action) *@
+                <ul class="nav navbar-nav">
+                    <li class="@(isHome ? "active" : null)">
+                        <a href="@Url.Action("Index", "Home")">Home</a>
+                    </li>
+                    <li class="@(isCatalog ? "active" : null)">
+                        <a href="@Url.Action("Index", "Product")">Catalog</a>
+                    </li>
+                    @Html.Action("NavCategories", "Product")
+                </ul>
+
+                @* Search: plain GET to the catalog — works with or without JavaScript. *@
+                <form class="navbar-form navbar-left site-search" role="search"
+                      action="@Url.Action("Index", "Product")" method="get">
+                    <div class="input-group">
+                        <input type="search" class="form-control" name="q"
+                               value="@(Request.QueryString["q"])"
+                               placeholder="Search products&hellip;" aria-label="Search products" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+
+                @* Right: live mini-cart + account menu *@
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="mini-cart" data-url="@Url.Action("MiniCart", "Cart")">
+                        @Html.Action("MiniCart", "Cart")
+                    </li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="dropdown account-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span class="account-name">@User.Identity.GetUserName()</span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header">My account</li>
+                                <li>@Html.ActionLink("My orders", "Orders", "Account")</li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logout-form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <a href="#" class="logout-link"
+                                           onclick="document.getElementById('logout-form').submit(); return false;">
+                                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Sign out
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@(currentController == "Account" && currentAction == "Login" ? "active" : null)">
+                            <a href="@Url.Action("Login", "Account")">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Log in
+                            </a>
+                        </li>
+                        <li class="register-item @(currentController == "Account" && currentAction == "Register" ? "active" : null)">
+                            <a href="@Url.Action("Register", "Account")">Register</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @if (IsSectionDefined("Sidebar"))
+        {
+            <div class="row">
+                <div class="col-md-3">
+                    @RenderSection("Sidebar")
+                </div>
+                <div class="col-md-9">
+                    @RenderBody()
+                </div>
+            </div>
+        }
+        else
+        {
+            @RenderBody()
+        }
+        <hr />
+        <footer>
+            <p class="text-muted">
+                Legacy eCommerce demo — .NET Framework 4.7 · MVC 5 · EF6 (EDMX) · session cart.
+                Built from the class-plan specification. No real payments are processed.
+            </p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/site")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
